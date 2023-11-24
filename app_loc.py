@@ -16,7 +16,7 @@ def run_loc_app():
     st.map(data=df_location, )
 
 
-    df_search = df.iloc[:,[6,8,10,11,12,28,29]]
+    df_search = df.iloc[:,[5,7,10,11,12,28,29]]
     df_search = df_search.rename(columns={'좌표(Y)':'lat','좌표(X)':'lon'})
     df_search = df_search[['lat','lon']]
     df_search = df_search.dropna()
