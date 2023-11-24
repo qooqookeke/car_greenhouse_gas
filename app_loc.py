@@ -10,3 +10,15 @@ def run_loc_app():
 
     st.dataframe(df_location)
     st.map(data=df_location, )
+
+
+    df.iloc[:[]]
+    st.map(data=df_location, )
+
+
+    df_search = df.iloc[:,[6,8,10,11,12,28,29]]
+    df_search = df_search.rename(columns={'좌표(Y)':'lat','좌표(X)':'lon'})
+    df_search = df_search[['lat','lon']]
+    df_search = df_search.dropna()
+    
+    st.dataframe(df_search)
