@@ -8,7 +8,7 @@ def main():
     st.title('전국 병원 정보')
 
 
-    menu = ['홈', '지역별 병원', '병원위치']
+    menu = ['홈', '지역별 병원 정보', '병원위치']
     choice = st.sidebar.selectbox('메뉴 선택', menu)
     if choice == menu[0]:
         run_home_app()

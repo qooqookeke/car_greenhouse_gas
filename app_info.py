@@ -9,8 +9,16 @@ def run_info_app():
     
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
     df = df.iloc[:,1:28]
-    st.header('지역별 병원 현황') 
-    st.dataframe(df)
+    st.header('지역별 병원 현황')
+    # st.dataframe(df)
+       
+    df.iloc[:,4].unique()
+    loc_name = df.iloc[:,4].unique()
+    choice1 = st.multiselect('지역을 선택하세요', loc_name)
+    if len(choice1) != 0 :
+                df_selected = df.iloc[:,4].unique() == choice1]
+                st.dataframe(df_selected)
+
     
     st.subheader('시도별 병원의 갯수')
     location = df['시도코드명'].value_counts().index

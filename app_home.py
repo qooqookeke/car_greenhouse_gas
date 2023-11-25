@@ -9,7 +9,7 @@ def run_home_app():
     st.image(img)
     
     st.subheader('공공데이터')
-    st.link_button('데이터 보러가기','https://opendata.hira.or.kr/op/opc/selectOpenData.do?sno=11925&publDataTpCd=&searchCnd=&searchWrd=%EC%A0%84%EA%B5%AD&pageIndex=1')
+    st.link_button('데이터 출처','https://opendata.hira.or.kr/op/opc/selectOpenData.do?sno=11925&publDataTpCd=&searchCnd=&searchWrd=%EC%A0%84%EA%B5%AD&pageIndex=1')
 
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
     df = df.iloc[:,1:]
