@@ -14,10 +14,12 @@ def run_info_app():
        
     df.iloc[:,4].unique()
     loc_name = df.iloc[:,4].unique()
-    choice1 = st.multiselect('지역을 선택하세요', loc_name)
-    if len(choice1) != 0 :
-                df_selected = df.iloc[:,4].unique() == choice1]
-                st.dataframe(df_selected)
+    selected_list = st.multiselect('지역을 선택하세요', loc_name)
+    if len(selected_list) != 0:
+        selected_data = df[(df['시도코드명'].isin(selected_list))]
+        st.dataframe(selected_data)
+    else:
+        st.text('')
 
     
     st.subheader('시도별 병원의 갯수')
