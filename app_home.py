@@ -7,7 +7,7 @@ def run_home_app():
     
     #
     img = Image.open('./img/medical-5459654_1280.png')
-    st.image(img, width=100)
+    st.image(img, width=400)
     
     ##
     st.subheader('공공데이터')
