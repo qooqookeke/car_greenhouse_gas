@@ -9,7 +9,7 @@ import platform
 from matplotlib import font_manager, rc
 plt.rcParams['axes.unicode_minus'] = False
 if platform.system() == 'Linux':
-    rc('font', family='Malgun Gothic')
+    rc('font', family='NanumGothic')
 
 def run_info_app():
     
@@ -20,8 +20,8 @@ def run_info_app():
     #
     st.subheader('시도별 병원의 갯수')
     location = df['시도코드명'].value_counts().index
-    plt.rc('font', family='Malgun Gothic')
-    plt.rcParams['font.family'] = 'Malgun Gothic'
+    # plt.rc('font', family='NanumGothic')
+    # plt.rcParams['font.family'] = 'NanumGothic'
     fig1 = plt.figure(figsize=(7,9))
     sb.countplot(data=df, y='시도코드명', order=location)
     plt.title('지역별 병원 수')
