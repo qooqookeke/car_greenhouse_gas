@@ -5,6 +5,12 @@ import matplotlib.pyplot as plt
 import seaborn as sb
 import plotly.express as px
 
+import platform
+from matplotlib import font_manager, rc
+plt.rcParams['axes.unicode_minus'] = False
+if platform.system() == 'Linux':
+    rc('font', family='NanumGothic')
+
 def run_info_app():
     
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
@@ -14,7 +20,7 @@ def run_info_app():
     #
     st.subheader('시도별 병원의 갯수')
     location = df['시도코드명'].value_counts().index
-    plt.rc('font', family='Malgun Gothic')
+    # plt.rc('font', family='Malgun Gothic')
     fig1 = plt.figure(figsize=(7,9))
     sb.countplot(data=df, y='시도코드명', order=location)
     plt.title('지역별 병원 수')
