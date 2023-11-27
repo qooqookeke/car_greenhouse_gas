@@ -21,8 +21,8 @@ def run_info_app():
     st.subheader('시도별 병원의 갯수')
     location = df['시도코드명'].value_counts().index
     # plt.rc('font', family='NanumGothic')
-    plt.rcParams['font.family'] = 'NanumGothic'
-    fig1 = plt.figure(figsize=(7,9))
+    # plt.rcParams['font.family'] = 'NanumGothic'
+    fig1 = plt.figure(figsize=(5,7))
     sb.countplot(data=df, y='시도코드명', order=location)
     plt.title('지역별 병원 수')
     plt.xlabel('병원 수')
