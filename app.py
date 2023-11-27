@@ -1,4 +1,11 @@
 import streamlit as st
+import matplotlib.pyplot as plt
+
+import platform
+from matplotlib import font_manager, rc
+plt.rcParams['axes.unicode_minus'] = False
+if platform.system() == 'Linux':
+    rc('font', family='NanumGothic')
 
 from app_home import run_home_app
 from app_info import run_info_app
