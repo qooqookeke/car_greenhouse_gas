@@ -62,7 +62,7 @@ def run_info_app():
         st.text('')
 
 
-    doc_count= df['총의사수'].max()
+    doc_count = df['총의사수'].max()
     doc_max = df.loc[df['총의사수'] == df['총의사수'].max(), ]
     max_name = doc_max['요양기관명']
     st.text('전국에서 가장 많은 의사가 있는 병원은 {} 이며,'.format(max_name))
