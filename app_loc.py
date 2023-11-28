@@ -11,7 +11,7 @@ def run_loc_app():
     df_search['병원홈페이지'] = df_search['병원홈페이지'].fillna('-')
     
     #
-    search_hos = st.text_input(label='병원 이름 검색')
+    search_hos = st.text_input(label='병원명 검색')
     hos_name = df_search['병원명'].str.contains(search_hos)
     df2 = df_search.loc[hos_name]
 
