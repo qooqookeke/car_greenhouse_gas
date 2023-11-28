@@ -23,4 +23,4 @@ def run_loc_app():
     st.map(mapdata)
 
     ###
-    st.dataframe(df2.loc[:,['병원명', '주소', '전화번호','병원홈페이지']])
+    st.dataframe(df2.loc[:,['병원명', '주소', '전화번호','병원홈페이지']],hide_index=1)
