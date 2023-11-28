@@ -16,4 +16,7 @@ def run_home_app():
     ###
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
     df = df.iloc[:,1:]
-    st.dataframe(df)
+    if st.checkbox('전국 병원 데이터 보기'):
+        st.dataframe(df)
+    else:
+        st.text('')
