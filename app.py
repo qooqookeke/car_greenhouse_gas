@@ -12,10 +12,10 @@ from app_info import run_info_app
 from app_loc import run_loc_app
 
 def main():
-    st.title('전국 병원 정보')
+    st.title('지역별 병원 정보 및 의료 불균형 파악')
 
 
-    menu = ['홈', '지역별 병원 정보', '병원위치']
+    menu = ['메인', '지역별 의료 불균형', '전국 병원 정보']
     choice = st.sidebar.selectbox('메뉴 선택', menu)
     if choice == menu[0]:
         run_home_app()
