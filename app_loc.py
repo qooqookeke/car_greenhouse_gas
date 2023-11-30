@@ -8,15 +8,16 @@ import pydeck as pdk
 def run_loc_app():
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
 
+    st.subheader('시군구별 병원 수 상위 10개')
     df_loc = df.iloc[:,1:28]
     df_loc.iloc[:,4].unique()
     loc_name = df_loc.iloc[:,4].unique()
     selected_list = st.selectbox('지역을 선택하세요', loc_name)
     if len(selected_list) != 0:
         selected_data = df_loc[(df_loc['시도코드명'].isin([selected_list]))].reset_index(drop=True)
-        st.dataframe(selected_data)
+
         order1 = selected_data['시군구코드명'].value_counts().head(10).index
-        fig2 = plt.figure()
+        fig2 = plt.figure(figsize=(5,5))
         sb.countplot(data= df, x='시군구코드명', order=order1)
         ax = sb.countplot(data=df, x='시군구코드명', order=order1)
         for p in ax.patches:
@@ -34,34 +35,25 @@ def run_loc_app():
         st.pyplot(fig2)
     else:
         st.text('')
+ 
         
     st.text('')
-
-
-    df_search = df.iloc[:,[1,10,11,12,28,29]]
-    df_search = df_search.rename(columns={'요양기관명':'병원명','좌표(Y)':'lat','좌표(X)':'lon'})
-    df_search = df_search[['병원명','주소','전화번호','병원홈페이지','lat','lon']]
-    df_search['병원홈페이지'] = df_search['병원홈페이지'].fillna('-')
-    df2 = df_search.loc[hos_name]
-    df2.loc[:,'lat':'lon'].dropna()
-    mapdata2 = df2.loc[:,'lat':'lon'].dropna()
-
-#    chart_data = pd.DataFrame(
-#    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
-#    columns=['lat', 'lon'])
-
+    st.subheader('전국 병원 분포')
+    df01 = df.loc[:, ['좌표(X)','좌표(Y)']]
+    df01 = df01.rename(columns={'좌표(X)':'lon','좌표(Y)':'lat'})
+ 
     st.pydeck_chart(pdk.Deck(
         map_style=None,
         initial_view_state=pdk.ViewState(
-            latitude=37.76,
-            longitude=-122.4,
-            zoom=11,
+            latitude=36.10,
+            longitude=127.60,
+            zoom=6.5,
             pitch=50,
         ),
         layers=[
             pdk.Layer(
             'HexagonLayer',
-            data=mapdata2,
+            data=df01,
             get_position='[lon, lat]',
             radius=200,
             elevation_scale=4,
@@ -71,7 +63,7 @@ def run_loc_app():
             ),
             pdk.Layer(
                 'ScatterplotLayer',
-                data=mapdata2,
+                data=df01,
                 get_position='[lon, lat]',
                 get_color='[200, 30, 0, 160]',
                 get_radius=200,
@@ -80,7 +72,7 @@ def run_loc_app():
     ))
 
 
-    
+    st.text(' ')
     st.subheader('병원 위치 및 대표전화')
 
     df_search = df.iloc[:,[1,10,11,12,28,29]]
