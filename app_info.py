@@ -13,17 +13,24 @@ def run_info_app():
     df = df.iloc[:,1:28]
     
     #
-    st.subheader('지역별 병원수 비율')
+    st.subheader('지역별 병원 비율')
     loc1 = df['시도코드명'].value_counts()
     loc1 = loc1.to_frame().reset_index()
     loc1 = loc1.rename(columns={'시도코드명':'시도','count':'갯수'})
         
     chart1 = px.pie(data_frame=loc1, names='시도', values='갯수',
-                    title='각 지역별 병원수 비율 파이차트')
+                    title='각 지역별 병원 수 비율 파이차트')
     chart1.update_traces(textposition='inside', textinfo='percent+label')
     st.plotly_chart(chart1, use_container_width=True, height=600)
 
-    ## 
+    ##
+    st.subheader('지역별 의사수')
+    data00 = df.groupby('시도코드명')[['총의사수','의과인턴 인원수', '치과인턴 인원수', '한방인턴 인원수','의과레지던트 인원수','치과레지던트 인원수','한방레지던트 인원수']].sum()
+    choice = st.selectbox('지역 선택', df['시도코드명'].unique())
+    count = data00.loc[choice,'총의사수']
+    st.markdown('{} 지역의 총 의사수는 {}명 입니다.'.format(choice, count))
+
+    st.text(' ')
     doc_count = df['총의사수'].max()
     doc_max = df.loc[df['총의사수'] == df['총의사수'].max(), ]
     max_name = doc_max['요양기관명'].iloc[0]
@@ -32,13 +39,12 @@ def run_info_app():
     st.markdown('''의사 수는 :blue[**{}명**] 입니다.'''.format(doc_count))
 
 
-    data11 = df.groupby('시도코드명')[['의과인턴 인원수', '치과인턴 인원수', '한방인턴 인원수']].sum()
-    d1 = data11.sum(axis=1).sort_values(ascending=0)
-    d1.columns = ['지역','인턴 수']
-    st.dataframe(d1)
-
-
-
+    st.text(' ')
+    st.subheader('지역별 인턴, 레지던트 인원수')
+    data00 = df.groupby('시도코드명')[['총의사수','의과인턴 인원수', '치과인턴 인원수', '한방인턴 인원수','의과레지던트 인원수','치과레지던트 인원수','한방레지던트 인원수']].sum()
+    data00['인턴 총 인원수'] = data00.iloc[:,1:4].sum(axis=1)
+    data00['레지던트 총 인원수'] = data00.iloc[:,4:7].sum(axis=1)
+    st.dataframe(data00)
 
 
 
