@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sb
+import pydeck as pdk
 
 def run_loc_app():
     df = pd.read_csv('./data/hospital_data.csv', encoding='euc-kr')
@@ -35,6 +36,50 @@ def run_loc_app():
         st.text('')
         
     st.text('')
+
+
+    df_search = df.iloc[:,[1,10,11,12,28,29]]
+    df_search = df_search.rename(columns={'요양기관명':'병원명','좌표(Y)':'lat','좌표(X)':'lon'})
+    df_search = df_search[['병원명','주소','전화번호','병원홈페이지','lat','lon']]
+    df_search['병원홈페이지'] = df_search['병원홈페이지'].fillna('-')
+    df2 = df_search.loc[hos_name]
+    df2.loc[:,'lat':'lon'].dropna()
+    mapdata2 = df2.loc[:,'lat':'lon'].dropna()
+
+#    chart_data = pd.DataFrame(
+#    np.random.randn(1000, 2) / [50, 50] + [37.76, -122.4],
+#    columns=['lat', 'lon'])
+
+    st.pydeck_chart(pdk.Deck(
+        map_style=None,
+        initial_view_state=pdk.ViewState(
+            latitude=37.76,
+            longitude=-122.4,
+            zoom=11,
+            pitch=50,
+        ),
+        layers=[
+            pdk.Layer(
+            'HexagonLayer',
+            data=mapdata2,
+            get_position='[lon, lat]',
+            radius=200,
+            elevation_scale=4,
+            elevation_range=[0, 1000],
+            pickable=True,
+            extruded=True,
+            ),
+            pdk.Layer(
+                'ScatterplotLayer',
+                data=mapdata2,
+                get_position='[lon, lat]',
+                get_color='[200, 30, 0, 160]',
+                get_radius=200,
+            ),
+        ],
+    ))
+
+
     
     st.subheader('병원 위치 및 대표전화')
 
