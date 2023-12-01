@@ -10,67 +10,69 @@ def run_loc_app():
 
     df_loc = df.iloc[:,[5,7,28,29]]
     df_loc = df_loc.rename(columns={'좌표(X)':'lon','좌표(Y)':'lat'})
-    st.dataframe(df_loc)
 
+    st.subheader('지역별 병원 분포')
     loc_name = df_loc.loc[:,'시도코드명'].unique()
     selected_list = st.multiselect('지역을 선택하세요', loc_name)
     print(selected_list)
-
-    selected_data = df_loc.loc[df['시도코드명'].isin([selected_list])].reset_index(drop=True)
-    st.dataframe(selected_data)
+    
+    selected_data = df_loc.loc[df['시도코드명'].isin(selected_list)].reset_index(drop=True)
 
     st.text('')
-    st.subheader('전국 병원 분포')
- 
-    st.pydeck_chart(pdk.Deck(
-        map_style=None,
-        initial_view_state=pdk.ViewState(
-            latitude=36.10,
-            longitude=127.60,
-            zoom=6.5,
-            pitch=50,
-        ),
-        layers=[
-            pdk.Layer(
-            'HexagonLayer',
-            data=selected_list,
-            get_position='[lon, lat]',
-            radius=200,
-            elevation_scale=4,
-            elevation_range=[0, 1000],
-            pickable=True,
-            extruded=True,
+    
+    if len(selected_list) != 0:
+        st.pydeck_chart(pdk.Deck(
+            map_style=None,
+            initial_view_state=pdk.ViewState(
+                latitude=36.10,
+                longitude=127.60,
+                zoom=6.5,
+                pitch=50,
             ),
+            layers=[
+                pdk.Layer(
+                'HexagonLayer',
+                data=selected_data,
+                get_position='[lon, lat]',
+                radius=200,
+                elevation_scale=4,
+                elevation_range=[0, 1000],
+                pickable=True,
+                extruded=True,
+                ),
             pdk.Layer(
                 'ScatterplotLayer',
-                data=selected_list,
+                data=selected_data,
                 get_position='[lon, lat]',
                 get_color='[200, 30, 0, 160]',
                 get_radius=200,
             ),
         ],
     ))
+    else:
+        st.text('')
 
-    st.subheader('시군구별 병원 수 상위 10개')
+    st.text(' ')
+    st.subheader('시도별 병원 수')
     
     if len(selected_list) != 0:
-        selected_data = df_loc[(df_loc['시도코드명'].isin([selected_list]))].reset_index(drop=True)
-        order1 = selected_data['시군구코드명'].value_counts().head(10).index
+        print(selected_list)
+        select_data = df_loc[(df_loc['시도코드명'].isin([selected_list]))].reset_index(drop=True)
+        order1 = selected_data['시도코드명'].value_counts().index
         
         fig2 = plt.figure(figsize=(5,5))
-        sb.countplot(data= df, x='시군구코드명', order=order1)
-        ax = sb.countplot(data=df, x='시군구코드명', order=order1)
+        ax = sb.countplot(data=selected_data, x='시도코드명', order=order1)
         for p in ax.patches:
             height = p.get_height()
-            ax.text(x = p.get_x() + p.get_width() / 2, 
-                    y = height + 10, 
+            ax.text(x = p.get_x() + p.get_width()/2, 
+                    y = height + 200, 
                     s = int(height), 
                     ha = 'center', 
                     size = 9)
-        # ax.set_ylim(0, 3000)
-        plt.title('시군구별 병원수 상위 10개')
+        # ax.set_ylim(0, 20000)
+        plt.title('시도별 병원수')
         plt.xticks(rotation = 60)
-        plt.xlabel('시군구')
+        plt.xlabel('시도')
         plt.ylabel('갯수')
         st.pyplot(fig2)
     else:

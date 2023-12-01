@@ -23,14 +23,6 @@ def run_info_app():
     chart1.update_traces(textposition='inside', textinfo='percent+label')
     st.plotly_chart(chart1, use_container_width=True, height=600)
 
-    ##
-    # doc_count = df['총의사수'].max()
-    # doc_max = df.loc[df['총의사수'] == df['총의사수'].max(), ]
-    # max_name = doc_max['요양기관명'].iloc[0]
-    # st.info('전국에서 가장 많은 의사가 있는 병원은\n "{}" 이며, \n 의사 수는 "총 {}명" 입니다.'.format(max_name, doc_count) ,icon='ℹ️')
-    # st.markdown(' 전국에서 가장 많은 의사가 있는 병원은')
-    # st.markdown(''':green[**{}**] 이며,'''.format(max_name))
-    # st.markdown('''의사 수는 :blue[**{}명**] 입니다.'''.format(doc_count))
     st.text(' ')
 
     # 지역별 바 차트
@@ -49,14 +41,34 @@ def run_info_app():
     data01 = df.groupby('시도코드명')[['의과인턴 인원수', '치과인턴 인원수', '한방인턴 인원수','의과레지던트 인원수','치과레지던트 인원수','한방레지던트 인원수']].sum()
     data01['인턴 총 인원수'] = data01.iloc[:,1:4].sum(axis=1)
     data01['레지던트 총 인원수'] = data01.iloc[:,4:7].sum(axis=1)
+    data01 = data01[data01['인턴 총 인원수'] != 0]
     st.dataframe(data01)
     
+    st.text(' ')
+    i_cnt = data01['인턴 총 인원수'].max()
+    r_cnt = data01['레지던트 총 인원수'].max()
+    d_cnt = i_cnt + r_cnt
+    i_mcnt = data01['인턴 총 인원수'].min()
+    r_mcnt = data01['레지던트 총 인원수'].min()
+    d_mcnt = i_mcnt + r_mcnt
+    doc_max = data01.loc[data01['인턴 총 인원수']+data01['레지던트 총 인원수'] == d_cnt].reset_index(drop=0)
+    max_name = doc_max.iloc[0,0]
+    doc_min = data01.loc[data01['인턴 총 인원수']+data01['레지던트 총 인원수'] == d_mcnt].reset_index(drop=0)
+    min_name = doc_min.iloc[0,0]
+    dd = round(d_cnt/d_mcnt, 2)
+    # st.info('전국에서 가장 많은 의사가 있는 병원은\n "{}" 이며, \n 의사 수는 "총 {}명" 입니다.'.format(max_name, doc_count) ,icon='ℹ️')
+    st.markdown(' 가장 많은 인턴과 레지던트 의사가 있는 지역은')
+    st.markdown(''':green[*{}*] 이며, 인턴 :orange[**{}**] 명, 레지던트 :orange[**{}**] 명으로 총 :blue[**{}**] 명 입니다.'''.format(max_name, i_cnt, r_cnt, d_cnt))
+    st.text(' ')
+    st.markdown('''가장 적은 지역인 :violet[*{}*]의 인턴과 레지던트 수는 총 :blue[**{}**] 명 으로'''.format(min_name, d_mcnt))
+    st.markdown(''':green[*{}*]과 약 :red[***{}배***] 차이가 납니다.'''.format(max_name, dd))
 
     
     # choice2 = st.checkbox('지역 선택', df['시도코드명'].unique())
     # count2 = data01.loc[choice2, ['인턴 총 인원수','레지던트 총 인원수']].sum(axis=1)
     
     data03 = data01.reset_index(drop=0)
+
     # st.dataframe(data03)
     # print(type[data01])
     # data01 = px.data.tips()
