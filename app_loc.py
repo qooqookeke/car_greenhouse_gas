@@ -16,7 +16,7 @@ def run_loc_app():
     selected_list = st.multiselect('지역을 선택하세요', loc_name)
     print(selected_list)
 
-    selected_data = df_loc[df['시도코드명'].isin([selected_list])].reset_index(drop=True)
+    selected_data = df_loc.loc[df['시도코드명'].isin([selected_list])].reset_index(drop=True)
     st.dataframe(selected_data)
 
     st.text('')
